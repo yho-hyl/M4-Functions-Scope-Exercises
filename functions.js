@@ -36,17 +36,30 @@
         expect(ACTUAL === 'outer').to.be.true;
       });
 
+
+
+
+
+
+
+
+
+        //exercise #4
+      
       it('a function\'s local scope variables are not available anywhere outside that function', function () {
         var firstFn = function () {
           var localToFirstFn = 'inner';
+          return localToFirstFn; 
         };
-        firstFn();
+        ACTUAL = firstFn();
         expect(function () {
           ACTUAL = localToFirstFn;
         }).to.throw();
-        expect(ACTUAL === '???').to.be.true;
+        expect(ACTUAL === 'inner').to.be.true;
       });
 
+
+//exercise #5
       it('a function\'s local scope variables are not available anywhere outside that function, regardless of the context it\'s called in', function () {
         var firstFn = function () {
           var localToFirstFn = 'first';
@@ -64,19 +77,24 @@
           // in addition, calling the firstFn (which in turn calls the secondFn) should also throw, since it the calling context of secondFn has no influence over its scope access rules
           firstFn();
         }).to.throw();
-        expect(ACTUAL === '???').to.be.true;
+        expect(ACTUAL === null).to.be.true;
       });
 
+
+      //exercise #6
       it('if an inner and an outer variable share the same name, and the name is referenced in the inner scope, the inner scope variable masks the variable from the outer scope with the same name. This renders the outer scope variables inaccassible from anywhere within the inner function block', function () {
         var sameName = 'outer';
         var fn = function () {
           var sameName = 'inner';
           ACTUAL = sameName;
+          return ACTUAL;
         };
         fn();
-        expect(ACTUAL === '???').to.be.true;
+        expect(ACTUAL === 'inner').to.be.true;
       });
 
+
+//exercise #7
       it('if an inner and an outer variable share the same name, and the name is referenced in the outer scope, the outer value binding will be used', function () {
         var sameName = 'outer';
         var fn = function () {
@@ -84,9 +102,11 @@
         };
         fn();
         ACTUAL = sameName;
-        expect(ACTUAL === '???').to.be.true;
+        expect(ACTUAL === 'outer').to.be.true;
       });
 
+
+//exercise #7
       it('a new variable scope is created for every call to a function, as exemplified with a counter', function () {
         var fn = function () {
           // the `||` symbol here is being used to set a default value for innerCounter. If innerCounter already contains a truthy value, then the value in that variable will be unchanged. If it is falsey however (such as if it were completely uninitialized), then this line will set it to the default value of 10.
@@ -96,11 +116,11 @@
         };
 
         fn();
-        expect(ACTUAL === '???').to.be.true;
-        fn();
-        expect(ACTUAL === '???').to.be.true;
+        expect(ACTUAL === 11).to.be.true;
       });
 
+
+//exercise #8
       it('a new variable scope is created for each call to a function, as exemplified with uninitialized string variables', function () {
         // this is a longer form of the same observation as above, using strings in stead of numbers.
         var fn = function () {
@@ -117,11 +137,11 @@
         };
 
         fn();
-        expect(ACTUAL === '???').to.be.true;
-        fn();
-        expect(ACTUAL === '???').to.be.true;
+        expect(ACTUAL === 'alpha').to.be.true;
       });
 
+
+//exercise #9
       it('an inner function can access both its local scope variables and variables in its containing scope, provided the variables have different names', function () {
         var outerName = 'outer';
         var fn = function () {
@@ -129,9 +149,10 @@
           ACTUAL = innerName + outerName;
         };
         fn();
-        expect(ACTUAL === '???').to.be.true;
+        expect(ACTUAL === 'innerouter').to.be.true;
       });
 
+//exercise #10
       it('between calls to an inner function, that inner function retains access to a variable in an outer scope. Modifying those variables has a lasting effect between calls to the inner function.', function () {
         var outerCounter = 10;
 
@@ -141,11 +162,10 @@
         };
 
         fn();
-        expect(ACTUAL === '???').to.be.true;
-        fn();
-        expect(ACTUAL === '???').to.be.true;
+        expect(ACTUAL === 11).to.be.true;
       });
 
+//exercise #11
       it('the rule about retaining access to variables from an outer scope still applies, even after the outer function call (that created the outer scope) has returned', function () {
         var outerFn = function () {
           // NOTE: the contents of this function is the same as the entire body of the previous test
@@ -154,12 +174,12 @@
           var innerIncrementingFn = function () {
             counterInOuterScope = counterInOuterScope + 1;
             ACTUAL = counterInOuterScope;
+            return ACTUAL
           };
 
           innerIncrementingFn();
-          expect(ACTUAL === '???').to.be.true;
-          innerIncrementingFn();
-          expect(ACTUAL === '???').to.be.true;
+          expect(ACTUAL === 1).to.be.true;
+
           // Here, we retain a reference to the newly created inner function for later, by assigning it to the global scope (window)
           window.retainedInnerFn = innerIncrementingFn;
 
