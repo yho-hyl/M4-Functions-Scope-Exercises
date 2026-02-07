@@ -174,12 +174,12 @@
           var innerIncrementingFn = function () {
             counterInOuterScope = counterInOuterScope + 1;
             ACTUAL = counterInOuterScope;
-            return ACTUAL
           };
 
           innerIncrementingFn();
-          expect(ACTUAL === 1).to.be.true;
-
+          expect(ACTUAL === 11).to.be.true;
+          innerIncrementingFn();
+          expect(ACTUAL === 12).to.be.true;
           // Here, we retain a reference to the newly created inner function for later, by assigning it to the global scope (window)
           window.retainedInnerFn = innerIncrementingFn;
 
@@ -192,7 +192,7 @@
         expect(window.retainedInnerFn).to.be.a('function');
         // even though the outerFn has returned once the only call to it was completed a couple of lines above, the inner function remains available in the global scope, and still has access to the variables of that containing scope where it was first created.
         window.retainedInnerFn();
-        expect(ACTUAL === '???').to.be.true;
+        expect(ACTUAL === 13).to.be.true;
       });
 
   });
